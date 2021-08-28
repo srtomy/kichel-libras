@@ -1,0 +1,20 @@
+[
+  {
+    "name":"cavalo",
+    "temas":[
+      "campo"
+    ]
+  },
+  {
+    "name":"vaca",
+    "temas":[
+      "campo"
+    ]
+  },
+  {
+    "name":"ovelha",
+    "temas":[
+      "campo"
+    ]
+  }
+]
