@@ -1,12 +1,12 @@
 package io.github.srtomy.gui;
 
 import io.github.srtomy.builder.ThemeBuilder;
+import io.github.srtomy.model.Game;
 import io.github.srtomy.model.Keyword;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
@@ -24,18 +24,17 @@ import java.util.List;
 
 
 public class MainWindow extends VBox implements KeyWordEvent {
-    private List<Keyword> keywords;
-    private ObservableList<Keyword> successfulAttemptsKeyWord = FXCollections.observableList(new ArrayList<>());
-    private ObservableList<Keyword> unsuccessfulAttemptsKeyWord = FXCollections.observableList(new ArrayList<>());
+    private final Game game;
+    private final ObservableList<Keyword> successfulAttemptsKeyWord = FXCollections.observableList(new ArrayList<>());
+    private final ObservableList<Keyword> unsuccessfulAttemptsKeyWord = FXCollections.observableList(new ArrayList<>());
     private GridPane grid;
-    private String theme;
+    private Text txtTentativas;
 
 
     public MainWindow(List<Keyword> keywords) {
-        this.keywords = keywords;
-
-        ThemeBuilder themeBuilder = new ThemeBuilder();
-        theme = themeBuilder.getRandonTheme();
+        game = new Game();
+        game.setTheme(new ThemeBuilder().getRandonTheme());
+        game.setKeywords(keywords);
 
         initLayout();
 
@@ -53,11 +52,11 @@ public class MainWindow extends VBox implements KeyWordEvent {
         var boxHeader = new HBox();
 
         var lblTheme = new Label( "Tema: ");
-        var txtTheme = new Text(toCamelCase(theme));
+        var txtTheme = new Text(game.getThemeCamelCase());
         var space = new Region();
         var lblTentativas = new Label("Tentativas:");
-        var txtTentativas = new Text("0/");
-        var txtTentativasMax = new Text("5");
+        txtTentativas = new Text(game.getActualAttempt()+"/");
+        var txtTentativasMax = new Text(String.valueOf(game.getActualAttemptsMax()));
 
         lblTheme.setFont(Font.font(25));
         txtTheme.setFont(Font.font(null, FontWeight.BOLD, 25));
@@ -85,7 +84,7 @@ public class MainWindow extends VBox implements KeyWordEvent {
         int count = 0;
         for (int linha = 0; linha < 5; linha++) {
             for (int coluna = 0; coluna < 3; coluna++) {
-                var keyWordView = new KeyWordView(keywords.get(count));
+                var keyWordView = new KeyWordView(game.getKeywords().get(count));
                 keyWordView.setKeyWordListener(this);
                 grid.add(keyWordView, coluna, linha);
                 count++;
@@ -117,28 +116,26 @@ public class MainWindow extends VBox implements KeyWordEvent {
 
     @Override
     public boolean setAssertKeyWordTheme(Keyword keyword) {
-        var acert = keyword.getTheme().getName().equals(theme);
+        var acert = keyword.getTheme().getName().equals(game.getTheme());
         if(acert){
-            successfulAttemptsKeyWord.add(keyword);
+            game.addHit();
+            if(game.hasNewHit()){
+                successfulAttemptsKeyWord.add(keyword);
+            }else{
+                System.exit(0);
+            }
         }else
         {
-            unsuccessfulAttemptsKeyWord.add(keyword);
+            game.addAttempt();
+            if(game.hasNewAttemp()){
+                unsuccessfulAttemptsKeyWord.add(keyword);
+                txtTentativas.setText(game.getActualAttempt()+"/");
+            }else {
+                System.exit(0);
+            }
         }
 
         return  acert;
     }
 
-    private String toCamelCase(String s){
-        String[] parts = s.split("_");
-        String camelCaseString = "";
-        for (String part : parts){
-            camelCaseString = camelCaseString + toProperCase(part);
-        }
-        return camelCaseString;
-    }
-
-    private String toProperCase(String s) {
-        return s.substring(0, 1).toUpperCase() +
-                s.substring(1).toLowerCase();
-    }
 }
