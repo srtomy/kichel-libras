@@ -1,10 +1,12 @@
 package io.github.srtomy.model;
 
+import java.nio.file.Path;
 import java.util.Objects;
 
 public class Keyword {
     private String description;
     private Theme theme;
+    private Path img;
 
     //get e set
     public String getDescription() {
@@ -23,11 +25,17 @@ public class Keyword {
         this.theme = theme;
     }
 
+    public Path getImg() {
+        return img;
+    }
+
+    public void setImg(Path img) {
+        this.img = img;
+    }
+
     @Override
     public String toString() {
-        return "Keyword{" +
-                "description='" + description + '\'' +
-                '}';
+        return description;
     }
 
     @Override

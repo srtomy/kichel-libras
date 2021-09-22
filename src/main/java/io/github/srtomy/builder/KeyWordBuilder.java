@@ -3,6 +3,7 @@ package io.github.srtomy.builder;
 import io.github.srtomy.model.Keyword;
 import io.github.srtomy.model.Theme;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,11 +37,13 @@ public class KeyWordBuilder {
         var keyword = new Keyword();
         keyword.setDescription("cavalo");
         keyword.setTheme(theme);
+        keyword.setImg(Path.of("file:img/cavalo.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
         keyword.setDescription("vaca");
         keyword.setTheme(theme);
+        keyword.setImg(Path.of("file:img/vaca.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
@@ -51,6 +54,7 @@ public class KeyWordBuilder {
         keyword = new Keyword();
         keyword.setDescription("galinha");
         keyword.setTheme(theme);
+        keyword.setImg(Path.of("file:img/galinha.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
@@ -126,6 +130,7 @@ public class KeyWordBuilder {
         keyword = new Keyword();
         keyword.setDescription("Espinafre");
         keyword.setTheme(theme);
+        keyword.setImg(Path.of("file:img/espinafre.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
@@ -149,17 +154,6 @@ public class KeyWordBuilder {
     }
 
     private static List<Keyword> getListFromColors(){
-
-
-
-
-
-
-
-
-
-
-
         var keywords = new ArrayList<Keyword>();
 
         var theme = new Theme("cores");
