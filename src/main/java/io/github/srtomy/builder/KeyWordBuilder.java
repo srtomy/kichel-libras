@@ -14,14 +14,14 @@ public class KeyWordBuilder {
         var keywords = new ArrayList<Keyword>();
 
         //add animais
-        var listAnimals =getListFromAnimals().stream().limit(5).collect(Collectors.toList());
+        var listAnimals =getListFromAnimals().stream().limit(4).collect(Collectors.toList());
         keywords.addAll(listAnimals);
 
         //add
-        var listFoods =getListFromFood().stream().limit(5).collect(Collectors.toList());
+        var listFoods =getListFromFood().stream().limit(4).collect(Collectors.toList());
         keywords.addAll(listFoods);
 
-        var listColors =getListFromColors().stream().limit(5).collect(Collectors.toList());
+        var listColors =getListFromColors().stream().limit(4).collect(Collectors.toList());
         keywords.addAll(listColors);
 
         Collections.shuffle(keywords);
@@ -32,61 +32,65 @@ public class KeyWordBuilder {
     private static List<Keyword> getListFromAnimals(){
         var keywords = new ArrayList<Keyword>();
 
-        var theme = new Theme("campo");
+        var theme = new Theme("Animais");
 
         var keyword = new Keyword();
-        keyword.setDescription("cavalo");
+        keyword.setDescription("Cavalo");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/cavalo.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("vaca");
+        keyword.setDescription("Vaca");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/vaca.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("ovelha");
+        keyword.setDescription("Ovelha");
         keyword.setTheme(theme);
-        keyword.setImg(Path.of("file:img/ovelhar.gif"));
+        keyword.setImg(Path.of("file:img/ovelha.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("galinha");
+        keyword.setDescription("Galinha");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/galinha.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("galo");
+        keyword.setDescription("Galo");
+        keyword.setImg(Path.of("file:img/galo.gif"));
         keyword.setTheme(theme);
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("gato");
+        keyword.setDescription("Gato");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/gato.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("cachorro");
+        keyword.setDescription("Cachorro");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/cachorro.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("passarinho");
+        keyword.setDescription("Passarinho");
+        keyword.setImg(Path.of("file:img/passarinho.gif"));
         keyword.setTheme(theme);
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("leao");
+        keyword.setDescription("Leao");
+        keyword.setImg(Path.of("file:img/leao.gif"));
         keyword.setTheme(theme);
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("leopardo");
+        keyword.setDescription("Tigre");
+        keyword.setImg(Path.of("file:img/tigre.gif"));
         keyword.setTheme(theme);
         keywords.add(keyword);
 
@@ -107,49 +111,49 @@ public class KeyWordBuilder {
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("Peixes");
+        keyword.setDescription("Peixe");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/peixes.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("Frutas");
+        keyword.setDescription("Fruta");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/frutas.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("Carnes");
+        keyword.setDescription("Carne");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/carnes.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("Ovos");
+        keyword.setDescription("Ovo");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/ovos.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("Vegetais");
+        keyword.setDescription("Vegetal");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/vegetais.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("Legumes");
+        keyword.setDescription("Legume");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/legumes.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("Cereais");
+        keyword.setDescription("Cereal");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/cereais.gif"));
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("Feijao");
+        keyword.setDescription("Feijão");
         keyword.setTheme(theme);
         keyword.setImg(Path.of("file:img/feijao.gif"));
         keywords.add(keyword);
@@ -168,7 +172,7 @@ public class KeyWordBuilder {
     private static List<Keyword> getListFromColors(){
         var keywords = new ArrayList<Keyword>();
 
-        var theme = new Theme("cores");
+        var theme = new Theme("Cores");
 
         var keyword = new Keyword();
         keyword.setDescription("Vermelho");
@@ -178,6 +182,7 @@ public class KeyWordBuilder {
 
         keyword = new Keyword();
         keyword.setDescription("Rosa");
+        keyword.setImg(Path.of("file:img/rosa.gif"));
         keyword.setTheme(theme);
         keywords.add(keyword);
 
@@ -218,7 +223,8 @@ public class KeyWordBuilder {
         keywords.add(keyword);
 
         keyword = new Keyword();
-        keyword.setDescription("Castanho");
+        keyword.setDescription("Bege");
+        keyword.setImg(Path.of("file:img/bege.gif"));
         keyword.setTheme(theme);
         keywords.add(keyword);
 

@@ -3,9 +3,15 @@ package io.github.srtomy.gui;
 import io.github.srtomy.builder.ThemeBuilder;
 import io.github.srtomy.model.Game;
 import io.github.srtomy.model.Keyword;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -18,8 +24,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -42,20 +52,24 @@ public class MainWindow extends VBox implements KeyWordEvent {
     }
 
     private void initActions() {
-        grid.setOnMouseClicked(evt->{
-            var target = (Node)evt.getTarget();
+        grid.setOnMouseClicked(evt -> {
+            var target = (Node) evt.getTarget();
             var columnIndex = GridPane.getColumnIndex(target);
         });
     }
 
     private void initLayout() {
-        var boxHeader = new HBox();
+        this.setAlignment(Pos.CENTER);
 
-        var lblTheme = new Label( "Tema: ");
+        var boxHeader = new HBox();
+        boxHeader.setAlignment(Pos.CENTER);
+
+        var lblTheme = new Label("Tema: ");
         var txtTheme = new Text(game.getThemeCamelCase());
-        var space = new Region();
+        var space1 = new Region();
+        var space2 = new Region();
         var lblTentativas = new Label("Tentativas:");
-        txtTentativas = new Text(game.getActualAttempt()+"/");
+        txtTentativas = new Text(game.getActualAttempt() + "/");
         var txtTentativasMax = new Text(String.valueOf(game.getActualAttemptsMax()));
 
         lblTheme.setFont(Font.font(25));
@@ -67,9 +81,26 @@ public class MainWindow extends VBox implements KeyWordEvent {
         boxHeader.getChildren().add(lblTheme);
         boxHeader.getChildren().add(txtTheme);
 
+        boxHeader.getChildren().add(space1);
+        HBox.setHgrow(space1, Priority.ALWAYS);
 
-        boxHeader.getChildren().add(space);
-        HBox.setHgrow(space, Priority.ALWAYS);
+        //time
+        final int[] initTime = {0};
+        var clock = new Label();
+        var format = new SimpleDateFormat("mm:ss");
+        var timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            final Calendar cal = Calendar.getInstance();
+            cal.set(0, 0, 0, 0, 0, initTime[0]);
+            clock.setText(format.format(cal.getTime()));
+            initTime[0]++;
+        }));
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
+
+        boxHeader.getChildren().add(clock);
+
+        boxHeader.getChildren().add(space2);
+        HBox.setHgrow(space2, Priority.ALWAYS);
 
         boxHeader.getChildren().add(lblTentativas);
         boxHeader.getChildren().add(txtTentativas);
@@ -82,32 +113,33 @@ public class MainWindow extends VBox implements KeyWordEvent {
         grid = new GridPane();
 
         int count = 0;
-        for (int linha = 0; linha < 5; linha++) {
-            for (int coluna = 0; coluna < 3; coluna++) {
+        for (int linha = 0; linha < 3; linha++) {
+            for (int coluna = 0; coluna < 4; coluna++) {
                 var keyWordView = new KeyWordView(game.getKeywords().get(count));
                 keyWordView.setKeyWordListener(this);
                 grid.add(keyWordView, coluna, linha);
                 count++;
             }
         }
-
-        VBox.setVgrow(grid, Priority.ALWAYS);
-
-        this.getChildren().add(grid);
+        var boxGrid = new HBox(grid);
+        boxGrid.setAlignment(Pos.CENTER);
+        this.getChildren().add(boxGrid);
 
         var boxSucess = new VBox();
+        boxSucess.setMaxHeight(200);
         ListView<Keyword> listViewSucess = new ListView<>();
         listViewSucess.setItems(successfulAttemptsKeyWord);
         var txtTextSuccess = new Text("Acertos");
 
-        boxSucess.getChildren().addAll(txtTextSuccess,listViewSucess);
+        boxSucess.getChildren().addAll(txtTextSuccess, listViewSucess);
 
         var boxUnSucess = new VBox();
+        boxUnSucess.setMaxHeight(200);
         ListView<Keyword> listViewUnSucess = new ListView<>();
         listViewUnSucess.setItems(unsuccessfulAttemptsKeyWord);
         var txtTextErros = new Text("Erros");
 
-        boxUnSucess.getChildren().addAll(txtTextErros,listViewUnSucess);
+        boxUnSucess.getChildren().addAll(txtTextErros, listViewUnSucess);
 
         HBox hboxList = new HBox(boxSucess, boxUnSucess);
         this.getChildren().add(hboxList);
@@ -117,25 +149,24 @@ public class MainWindow extends VBox implements KeyWordEvent {
     @Override
     public boolean setAssertKeyWordTheme(Keyword keyword) {
         var acert = keyword.getTheme().getName().equals(game.getTheme());
-        if(acert){
+        if (acert) {
             game.addHit();
-            if(game.hasNewHit()){
+            if (game.hasNewHit()) {
                 successfulAttemptsKeyWord.add(keyword);
-            }else{
+            } else {
                 System.exit(0);
             }
-        }else
-        {
+        } else {
             game.addAttempt();
-            if(game.hasNewAttemp()){
+            if (game.hasNewAttemp()) {
                 unsuccessfulAttemptsKeyWord.add(keyword);
-                txtTentativas.setText(game.getActualAttempt()+"/");
-            }else {
+                txtTentativas.setText(game.getActualAttempt() + "/");
+            } else {
                 System.exit(0);
             }
         }
 
-        return  acert;
+        return acert;
     }
 
 }
