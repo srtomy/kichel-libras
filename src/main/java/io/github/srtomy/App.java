@@ -1,10 +1,11 @@
 package io.github.srtomy;
 
 import io.github.srtomy.builder.KeyWordBuilder;
-import io.github.srtomy.gui.MainWindow;
+import io.github.srtomy.connection.Database;
+import io.github.srtomy.gui.GameView;
+import io.github.srtomy.gui.MainView;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 /**
@@ -14,11 +15,9 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        var javaVersion = SystemInfo.javaVersion();
-        var javafxVersion = SystemInfo.javafxVersion();
+        Database.getInstance().getConnection();
 
-        var label = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-        var scene = new Scene(new MainWindow(KeyWordBuilder.build()));
+        var scene = new Scene(new MainView(stage));
         stage.setScene(scene);
         stage.show();
     }

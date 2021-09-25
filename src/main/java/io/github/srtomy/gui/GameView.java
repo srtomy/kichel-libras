@@ -33,7 +33,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class MainWindow extends VBox implements KeyWordEvent {
+public class GameView extends VBox implements KeyWordEvent {
     private final Game game;
     private final ObservableList<Keyword> successfulAttemptsKeyWord = FXCollections.observableList(new ArrayList<>());
     private final ObservableList<Keyword> unsuccessfulAttemptsKeyWord = FXCollections.observableList(new ArrayList<>());
@@ -41,7 +41,7 @@ public class MainWindow extends VBox implements KeyWordEvent {
     private Text txtTentativas;
 
 
-    public MainWindow(List<Keyword> keywords) {
+    public GameView(List<Keyword> keywords) {
         game = new Game();
         game.setTheme(new ThemeBuilder().getRandonTheme());
         game.setKeywords(keywords);
