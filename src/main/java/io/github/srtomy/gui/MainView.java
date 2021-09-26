@@ -3,7 +3,7 @@ package io.github.srtomy.gui;
 import io.github.srtomy.builder.KeyWordBuilder;
 import io.github.srtomy.model.Record;
 import io.github.srtomy.repository.RecordRepository;
-import io.github.srtomy.service.RecordRepositoryService;
+import io.github.srtomy.service.RecordService;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
@@ -17,11 +17,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 public class MainView extends VBox {
     private final Stage mainWindows;
-    private final RecordRepository recordRepository = new RecordRepositoryService();
+    private final RecordRepository recordRepository = new RecordService();
     Button btnNewGame = new Button("Novo Jogo");
 
     public MainView(Stage mainWindows) {
@@ -52,8 +53,16 @@ public class MainView extends VBox {
         var table = new TableView<Record>();
         var tableColumnName = new TableColumn<Record, String>("Nome");
         var tableColumnTime = new TableColumn<Record, String>("Tempo");
+        var tableColumnDate = new TableColumn<Record, String>("Data");
 
         tableColumnName.setCellValueFactory(evt -> new ReadOnlyStringWrapper(evt.getValue().getName()));
+        tableColumnDate.setCellValueFactory(evt -> {
+            if (evt.getValue().getDate() == null) {
+                return new ReadOnlyStringWrapper("");
+            } else {
+                return new ReadOnlyStringWrapper(evt.getValue().getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+            }
+        });
 
         tableColumnTime.setCellValueFactory(evt -> {
             long millis = evt.getValue().getTimeDuration();
@@ -67,6 +76,7 @@ public class MainView extends VBox {
 
         table.getColumns().add(tableColumnName);
         table.getColumns().add(tableColumnTime);
+        table.getColumns().add(tableColumnDate);
 
         table.setItems(FXCollections.observableList(recordRepository.findTopRecords()));
 
@@ -75,7 +85,7 @@ public class MainView extends VBox {
     }
 
     private void showNewGameInstance() {
-        var view = new GameView(KeyWordBuilder.build());
+        var view = new GameView(KeyWordBuilder.build(), "Tarcisio", mainWindows);
         mainWindows.setScene(new Scene(view));
     }
 }

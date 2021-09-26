@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecordRepositoryService implements RecordRepository {
+public class RecordService implements RecordRepository {
     @Override
     public void create(io.github.srtomy.model.Record record) {
         try {
@@ -29,7 +29,7 @@ public class RecordRepositoryService implements RecordRepository {
     public List<Record> findTopRecords() {
         var records = new ArrayList<Record>();
         try {
-            var sql = "select top 10 id, name, time_duration from records order by time_duration asc";
+            var sql = "select top 10 id, name, time_duration, date from records order by time_duration asc";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -38,6 +38,7 @@ public class RecordRepositoryService implements RecordRepository {
                 record.setId(rs.getInt("ID"));
                 record.setName(rs.getString("NAME"));
                 record.setTimeDuration(rs.getInt("TIME_DURATION"));
+                record.setDate(rs.getTimestamp("date").toLocalDateTime());
                 records.add(record);
             }
 

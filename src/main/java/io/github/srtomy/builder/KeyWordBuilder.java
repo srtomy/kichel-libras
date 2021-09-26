@@ -102,7 +102,7 @@ public class KeyWordBuilder {
     private static List<Keyword> getListFromFood(){
         var keywords = new ArrayList<Keyword>();
 
-        var theme = new Theme("alimentos");
+        var theme = new Theme("Alimentos");
 
         var keyword = new Keyword();
         keyword.setDescription("Leite");

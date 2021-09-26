@@ -3,16 +3,20 @@ package io.github.srtomy.gui;
 import io.github.srtomy.builder.ThemeBuilder;
 import io.github.srtomy.model.Game;
 import io.github.srtomy.model.Keyword;
+import io.github.srtomy.model.Record;
+import io.github.srtomy.repository.RecordRepository;
+import io.github.srtomy.service.RecordService;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
@@ -24,27 +28,34 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class GameView extends VBox implements KeyWordEvent {
+    private Stage mainWindows;
     private final Game game;
+    private final RecordRepository repository = new RecordService();
     private final ObservableList<Keyword> successfulAttemptsKeyWord = FXCollections.observableList(new ArrayList<>());
     private final ObservableList<Keyword> unsuccessfulAttemptsKeyWord = FXCollections.observableList(new ArrayList<>());
     private GridPane grid;
     private Text txtTentativas;
+    private int timeDuration;
 
 
-    public GameView(List<Keyword> keywords) {
+    public GameView(List<Keyword> keywords, String playerName, Stage mainWindows) {
         game = new Game();
         game.setTheme(new ThemeBuilder().getRandonTheme());
         game.setKeywords(keywords);
+        game.setPlayer(playerName);
+
+        this.mainWindows = mainWindows;
 
         initLayout();
 
@@ -85,14 +96,18 @@ public class GameView extends VBox implements KeyWordEvent {
         HBox.setHgrow(space1, Priority.ALWAYS);
 
         //time
-        final int[] initTime = {0};
         var clock = new Label();
-        var format = new SimpleDateFormat("mm:ss");
-        var timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            final Calendar cal = Calendar.getInstance();
-            cal.set(0, 0, 0, 0, 0, initTime[0]);
-            clock.setText(format.format(cal.getTime()));
-            initTime[0]++;
+        var timeline = new Timeline(new KeyFrame(Duration.millis(1), event -> {
+            timeDuration++;
+
+            final String FORMAT = "%02d:%02d";
+            var strTime = String.format(FORMAT,
+                    TimeUnit.MILLISECONDS.toMinutes(timeDuration) - TimeUnit.HOURS.toMinutes(
+                            TimeUnit.MILLISECONDS.toHours(timeDuration)),
+                    TimeUnit.MILLISECONDS.toSeconds(timeDuration) - TimeUnit.MINUTES.toSeconds(
+                            TimeUnit.MILLISECONDS.toMinutes(timeDuration)));
+            clock.setText(strTime);
+
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
@@ -151,22 +166,43 @@ public class GameView extends VBox implements KeyWordEvent {
         var acert = keyword.getTheme().getName().equals(game.getTheme());
         if (acert) {
             game.addHit();
-            if (game.hasNewHit()) {
-                successfulAttemptsKeyWord.add(keyword);
-            } else {
-                System.exit(0);
+            successfulAttemptsKeyWord.add(keyword);
+            if (!game.hasNewHit()) {
+                endGame(true);
             }
         } else {
             game.addAttempt();
-            if (game.hasNewAttemp()) {
-                unsuccessfulAttemptsKeyWord.add(keyword);
-                txtTentativas.setText(game.getActualAttempt() + "/");
-            } else {
-                System.exit(0);
+            unsuccessfulAttemptsKeyWord.add(keyword);
+            txtTentativas.setText(game.getActualAttempt() + "/");
+            if (!game.hasNewAttemp()) {
+                endGame(false);
             }
         }
-
         return acert;
+    }
+
+    private void endGame(boolean isSucces) {
+        Dialog<Void> dialog;
+        if (isSucces) {
+            Record record = new Record();
+            record.setName(game.getPlayer());
+            record.setTimeDuration(timeDuration);
+            repository.create(record);
+
+            dialog = new Dialog<>();
+            dialog.setContentText("Parabens!!");
+        } else {
+            dialog = new Dialog<>();
+            dialog.setContentText("Game Over!!");
+        }
+
+        Window window = dialog.getDialogPane().getScene().getWindow();
+        window.setOnCloseRequest(event -> window.hide());
+
+        dialog.showAndWait();
+
+        mainWindows.setScene(new Scene(new MainView(mainWindows)));
+
     }
 
 }

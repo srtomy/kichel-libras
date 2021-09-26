@@ -4,11 +4,12 @@ import java.util.List;
 
 public class Game {
     private String theme;
+    private String player;
     private List<Keyword> keywords;
     private int actualAttempt = 0;
-    private int actualAttemptsMax = 5;
+    private int actualAttemptsMax = 4;
     private int actualHits = 0;
-    private int actualHistsMax = 5;
+    private int actualHistsMax = 4;
 
     public boolean hasNewAttemp() {
         return actualAttempt < actualAttemptsMax;
@@ -25,6 +26,7 @@ public class Game {
     public void addHit() {
         actualHits++;
     }
+
 
     public String getThemeCamelCase() {
         return toCamelCase(theme);
@@ -60,6 +62,14 @@ public class Game {
 
     public void setActualAttemptsMax(int actualAttemptsMax) {
         this.actualAttemptsMax = actualAttemptsMax;
+    }
+
+    public String getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(String player) {
+        this.player = player;
     }
 
     private String toCamelCase(String s) {

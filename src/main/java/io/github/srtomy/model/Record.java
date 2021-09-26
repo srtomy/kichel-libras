@@ -1,9 +1,12 @@
 package io.github.srtomy.model;
 
+import java.time.LocalDateTime;
+
 public class Record {
     private int id;
     private String name;
     private long timeDuration;
+    private LocalDateTime date;
 
     public int getId() {
         return id;
@@ -27,5 +30,13 @@ public class Record {
 
     public void setTimeDuration(long timeDuration) {
         this.timeDuration = timeDuration;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 }
