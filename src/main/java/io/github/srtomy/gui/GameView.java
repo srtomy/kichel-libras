@@ -190,9 +190,12 @@ public class GameView extends VBox implements KeyWordEvent {
             repository.create(record);
 
             dialog = new Dialog<>();
+            dialog.initOwner(mainWindows.getOwner());
+
             dialog.setContentText("Parabens!!");
         } else {
             dialog = new Dialog<>();
+            dialog.initOwner(mainWindows.getOwner());
             dialog.setContentText("Game Over!!");
         }
 

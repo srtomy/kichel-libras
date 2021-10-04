@@ -7,10 +7,7 @@ import io.github.srtomy.service.RecordService;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -18,6 +15,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class MainView extends VBox {
@@ -85,7 +83,24 @@ public class MainView extends VBox {
     }
 
     private void showNewGameInstance() {
-        var view = new GameView(KeyWordBuilder.build(), "Tarcisio", mainWindows);
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Novo Jogo");
+        dialog.setHeaderText("Novo Jogo");
+        dialog.setContentText("Por favor digite nome do jogador:");
+
+        String name = "";
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            name = result.get();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Nome do jogador invalido");
+            alert.showAndWait();
+            System.exit(0);
+        }
+
+        var view = new GameView(KeyWordBuilder.build(), name, mainWindows);
         mainWindows.setScene(new Scene(view));
     }
 }
